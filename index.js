@@ -1,5 +1,6 @@
 
 var randomKeys = require('random-enough');
+var playerTable = require('playerIndex').createTable();
 var redis = require("redis");
 var argv = require('minimist')(process.argv.splice(2));
 
@@ -9,25 +10,20 @@ if(argv.port === undefined){argv.port = 8080;}
 
 console.log(argv.port);
 
-var log = argv.save ? 
+var log = argv.save ?
 	require('just-logger').createLogger(argv.save):
-	require('just-logger').createLogger(); 
+	require('just-logger').createLogger();
 
 var datastore = redis.createClient();
 datastore.on("error", function(err){
 	log.error(err);
 });
-var server = http.createServer(function(request, response){
-	log.info("new request");
-})
 
-var io = require("socket.io").listen(8080, '0.0.0.0');
+var io = require("socket.io").listen(argv.port, '0.0.0.0');
 io.sockets.on('connection', newConnection);
 io.sockets.on('error', function(err){
 	log.error(err);
 });
-
-var players = [];
 
 var newConnection = function(socket){
 	logger.info("new socket connection");
@@ -40,21 +36,25 @@ var newConnection = function(socket){
 		//data = {
 		//	playerID : int
 		//	}
+		
+		var found = playerTable.containsPlayer(data.playerID);
+		socket.emit("playerFound", {playerId: data.playerID, playerFound: found});
+		
 	});
 	socket.on("registerPlayer", function(data){
 		// data = {
 		// id : created by player
 		//	}
 		if(data.id){
-			players.add({socket:socket, playerId:data.id});
+			playerTable.Add(socket, data.id);
 			socket.emit("registerStatus", {response:"ok"});
 		}else{
-			socket.emit("registerStatus", {response:"error"});	
+			socket.emit("registerStatus", {response:"error"});
 		}
 	});
 	socket.on("sendScore", function(data){
 		//data = {
-		//	player: name, 
+		//	player: name,
 		//	score: value
 		//	}
 	});
