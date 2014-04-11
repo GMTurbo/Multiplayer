@@ -1,6 +1,6 @@
 
 var randomKeys = require('random-enough');
-var playerTable = require('playerIndex').createTable();
+var playerTable = require('./playerTable.js').createTable();
 var redis = require("redis");
 var argv = require('minimist')(process.argv.splice(2));
 
@@ -36,10 +36,10 @@ var newConnection = function(socket){
 		//data = {
 		//	playerID : int
 		//	}
-		
+
 		var found = playerTable.containsPlayer(data.playerID);
 		socket.emit("playerFound", {playerId: data.playerID, playerFound: found});
-		
+
 	});
 	socket.on("registerPlayer", function(data){
 		// data = {

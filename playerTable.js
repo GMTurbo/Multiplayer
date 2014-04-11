@@ -5,7 +5,7 @@ function playerTable(){
     *   _list[socket] = {playerId:int, matched: bool};
     *
     */
-    
+
     //search the table for a given player id
     this.containsPlayer = function(pid){
       var list = this._list;
@@ -15,7 +15,7 @@ function playerTable(){
       }
       return false;
     };
-    
+
     //get the socket associated with a player id
     this.getSocket = function(id){
 
@@ -27,11 +27,11 @@ function playerTable(){
         }
         return undefined;
     };
-    
+
     this.Add = function(socket, playerid){
       this._list[socket] = this._wrapData(playerid, false);
     };
-    
+
     this._wrapData = function(id, mtchd){
       return {
         playerId: id,
@@ -41,7 +41,8 @@ function playerTable(){
 }
 
 function createTable(){
-  
+
     return new playerTable();
-    
 }
+
+module.exports.createTable = createTable;
