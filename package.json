@@ -15,6 +15,7 @@
   "author": "Gabe Testa",
   "license": "MIT",
   "devDependencies": {
+    "cli-table": "^0.3.0",
     "just-logger": "^1.0.0",
     "minimist": "0.0.8",
     "mocha": "^1.18.2",
