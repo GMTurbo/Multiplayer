@@ -1,6 +1,4 @@
 
-var randomKeys = require('random-enough');
-
 function playerTable(){
     this._list = [];
     /* entries should look like this
