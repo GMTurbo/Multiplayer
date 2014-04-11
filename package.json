@@ -4,7 +4,7 @@
   "description": "module to handle 2 player multiplayer ",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node test/test.js"
   },
   "keywords": [
     "socketio",
