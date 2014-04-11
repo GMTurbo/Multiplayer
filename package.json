@@ -15,11 +15,12 @@
   "author": "Gabe Testa",
   "license": "MIT",
   "devDependencies": {
-    "socket.io": "^0.9.16",
     "just-logger": "^1.0.0",
     "minimist": "0.0.8",
-    "random-enough": "^1.0.2",
     "mocha": "^1.18.2",
-    "should": "^3.3.0"
+    "random-enough": "^1.0.2",
+    "redis": "^0.10.1",
+    "should": "^3.3.0",
+    "socket.io": "^0.9.16"
   }
 }
