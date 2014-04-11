@@ -21,6 +21,7 @@
     "random-enough": "^1.0.2",
     "redis": "^0.10.1",
     "should": "^3.3.0",
-    "socket.io": "^0.9.16"
+    "socket.io": "^0.9.16",
+    "tape": "^2.12.3"
   }
 }
