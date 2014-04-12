@@ -1,7 +1,9 @@
 
 var Table = require("cli-table");
+
 function playerTable(){
     this._list = [];
+    this._uidToSocket = [];
     /* entries should look like this
     *   _list[JSON.stringify(socket)] = {socket: socket, playerId:int, matched: bool};
     *
@@ -40,11 +42,11 @@ function playerTable(){
     };
 
     this.setScore = function(socket, score){
-        var info = this.getSocketInfo(socket);
+        var info = this._list[socket.id];
+        this._checkForHighScore(score);
         if(info){
           info.score = score;
         }
-        this._checkForHighScore(score);
         return info.score;
     };
 
@@ -67,25 +69,11 @@ function playerTable(){
         }
       }
       if(score > max && this.highScoreCallback){
+          console.log("new high score. sending event");
           this.highScoreCallback(score);
       }
     };
 
-    this.clearMatched = function(socket){
-      var sockInfo = this.getSocketInfo(socket);
-      //removing removed socket,
-      //so get his living partner and disconnet first
-      var partner = this.getSocketInfo(sockInfo.matched);
-      if(!partner)//single player
-        return;
-      //disconnect
-      partner.matched = null;
-      //disconnect
-      sockInfo.matchCode = -1;
-      sockInfo.matched = null;
-
-      return (sockInfo.matched === null && partner.matched===null);
-    }
 
     //search the table for a given player id
     this.containsPlayerId = function(pid){
@@ -112,26 +100,43 @@ function playerTable(){
     };
 
     this.getSocketInfo = function(socket){
-      var sjson = JSON.stringify(socket);
-      return this._list[sjson];
+      if(socket){
+        return this._list[socket.id];
+      }
     };
     //add an item to the list
     this.addPlayer = function(socket, playerid){
-      var sjson = JSON.stringify(socket);
-      this._list.push(sjson);
-      this._list[sjson] = this._wrapData(socket, playerid, null);
+      this._list.push(socket.id);
+      this._list[socket.id] = this._wrapData(socket, playerid, null);
       return this._list.length;
     };
 
     //add an item to the list
     this.removePlayer = function(socket){
-      var sjson = JSON.stringify(socket);
-      if(this._list[sjson]){
+      if(this._list[socket.id]){
         this.clearMatched(socket);
-        var removed = this._list.splice(sjson,1);
+        this._list.splice(socket.id,1);
       }
       return this._list.length;
     };
+
+    this.clearMatched = function(socket){
+      var sockInfo = this._list[socket.id];
+      //removing removed socket,
+      //so get his living partner and disconnet first
+      var partner = this.getSocketInfo(sockInfo.matched);
+      if(!partner)//single player
+        return;
+      //disconnect
+      partner.matched = null;
+      //disconnect
+      sockInfo.matchCode = -1;
+      sockInfo.matched = null;
+
+      return (sockInfo.matched === null && partner.matched===null);
+    }
+
+
         // wrap the data up for us
     this._wrapData = function(skt, id, mtchd){
       return {
@@ -160,10 +165,10 @@ function playerTable(){
 
       list.forEach(function(ent){
         table.push(
-            [count++,list[ent].score, list[ent].matchCode,list[ent].matched ? list[ent].matched : "null"]
+            [ent,list[ent].score, list[ent].matchCode,list[ent].matched ? list[ent].matched : "null"]
         );
-      });
-      console.log(table.toString());
+      }, this);
+
     }
 
 }
