@@ -3,12 +3,12 @@ console.log("***************** TESTING PLAYERTABLE OBJ ******************");
 var test = require('tape');
 var pTable = require("../playerTable.js").createTable();
 
-var socket1 = new Object({name:'socket1'});
-var socket2 = new Object({name:'socket2'});
-var socket3 = new Object({name:'socket3'});
-var socket4 = new Object({name:'socket4'});
-var socket5 = new Object({name:'socket5'});
-var socket6 = new Object({name:'socket6'});
+var socket1 = new Object({id:'socket1'});
+var socket2 = new Object({id:'socket2'});
+var socket3 = new Object({id:'socket3'});
+var socket4 = new Object({id:'socket4'});
+var socket5 = new Object({id:'socket5'});
+var socket6 = new Object({id:'socket6'});
 
 test('playerTable insert and delete', function(t){
 
