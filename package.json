@@ -4,7 +4,7 @@
   "description": "module to handle 2 player multiplayer ",
   "main": "index.js",
   "scripts": {
-    "test": "node test/test.js"
+    "test": "node test/*.js"
   },
   "keywords": [
     "socketio",

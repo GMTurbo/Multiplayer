@@ -1,42 +1,3 @@
-
-var should = require('should');
-
-// var io = require('socket.io-client');
-//
-// var socketURL = 'http://0.0.0.0:8080';
-//
-// var options ={
-//  transports: ['websockets'],
-//  'force new connection': true
-// };
-
-/*
-emits : registerStatus { response : "ok" || "error" }
-
-*/
-
-// it('Should return a success message on connect', function(done){
-//   var client1 = io.connect(socketURL, options);
-//
-//   client1.on('connect', function(data){
-//     client1.emit('connection name', chatUser1);
-//
-//     /* Since first client is connected, we connect
-//     the second client. */
-//     var client2 = io.connect(socketURL, options);
-//
-//     client2.on('connect', function(data){
-//       client2.emit('connection name', chatUser2);
-//     });
-//
-//     client2.on('new user', function(usersName){
-//       usersName.should.equal(chatUser2.name + " has joined.");
-//       client2.disconnect();
-//     });
-//
-//   });
-// });
-
 console.log("***************** TESTING PLAYERTABLE OBJ ******************");
 
 var test = require('tape');
@@ -135,12 +96,12 @@ test('playerTable containsPlayer check', function(t){
 
 test('playerTable matching check', function(t){
 
-  t.equal(1, pTable.addPlayer(socket1, 1), 'insert player1');
-  t.equal(2, pTable.addPlayer(socket2, 2), 'insert player2');
-  t.equal(3, pTable.addPlayer(socket3, 3), 'insert player3');
-  t.equal(4, pTable.addPlayer(socket4, 4), 'insert player1');
-  t.equal(5, pTable.addPlayer(socket5, 5), 'insert player2');
-  t.equal(6, pTable.addPlayer(socket6, 6), 'insert player3');
+  t.equal(pTable.addPlayer(socket1, 1), 1, 'insert player1');
+  t.equal(pTable.addPlayer(socket2, 2), 2, 'insert player2');
+  t.equal(pTable.addPlayer(socket3, 3), 3, 'insert player3');
+  t.equal(pTable.addPlayer(socket4, 4), 4, 'insert player1');
+  t.equal(pTable.addPlayer(socket5, 5), 5, 'insert player2');
+  t.equal(pTable.addPlayer(socket6, 6), 6, 'insert player3');
 
   t.equal(true, pTable.addMatchToken(socket1, 10), 'add token to player on socket1');
   pTable.print();
@@ -197,5 +158,45 @@ test('playerTable matching check', function(t){
   pTable.print();
 
   t.equal(0, pTable.clear(), "clear table test");
+  t.end();
+});
+
+test('playerTable score check', function(t){
+
+  t.equal(pTable.addPlayer(socket1, 1), 1, 'insert player1');
+  t.equal(pTable.addPlayer(socket2, 2), 2, 'insert player2');
+  t.equal(pTable.addPlayer(socket3, 3), 3, 'insert player3');
+  t.equal(pTable.addPlayer(socket4, 4), 4, 'insert player1');
+  t.equal(pTable.addPlayer(socket5, 5), 5, 'insert player2');
+  t.equal(pTable.addPlayer(socket6, 6), 6, 'insert player3');
+
+  t.equal(pTable.setScore(socket1, 10), pTable.getScore(socket1), "add score of 10 to socket1");
+  t.equal(pTable.setScore(socket2, 20), pTable.getScore(socket2), "add score of 10 to socket1");
+  t.equal(pTable.setScore(socket3, 30), pTable.getScore(socket3), "add score of 10 to socket1");
+  t.equal(pTable.setScore(socket4, 40), pTable.getScore(socket4), "add score of 10 to socket1");
+  t.equal(pTable.setScore(socket5, 50), pTable.getScore(socket5), "add score of 10 to socket1");
+  t.equal(pTable.setScore(socket6, 60), pTable.getScore(socket6), "add score of 10 to socket1");
+
+  pTable.print();
+
+  var testCb = function(expected){
+    return function(score){
+      t.equal(expected, score, "highScoreCallback fired with expected value");
+    };
+  };
+
+  pTable.highScoreCallback = testCb(100);
+  t.equal(pTable.setScore(socket1, 100), pTable.getScore(socket1), "add score of 100 to socket1");
+  pTable.highScoreCallback = testCb(200);
+  t.equal(pTable.setScore(socket2, 200), pTable.getScore(socket2), "add score of 200 to socket1");
+  pTable.highScoreCallback = testCb(300);
+  t.equal(pTable.setScore(socket3, 300), pTable.getScore(socket3), "add score of 300 to socket1");
+  pTable.highScoreCallback = testCb(400);
+  t.equal(pTable.setScore(socket4, 400), pTable.getScore(socket4), "add score of 400 to socket1");
+  pTable.highScoreCallback = testCb(500);
+  t.equal(pTable.setScore(socket5, 500), pTable.getScore(socket5), "add score of 500 to socket1");
+  t.equal(pTable.setScore(socket6, 65), pTable.getScore(socket6), "add score of 10 to socket1");
+
+
   t.end();
 });
