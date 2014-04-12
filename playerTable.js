@@ -39,6 +39,38 @@ function playerTable(){
       }
     };
 
+    this.setScore = function(socket, score){
+        var info = this.getSocketInfo(socket);
+        if(info){
+          info.score = score;
+        }
+        this._checkForHighScore(score);
+        return info.score;
+    };
+
+    this.getScore = function(socket){
+        var info = this.getSocketInfo(socket);
+        if(info){
+          return info.score;
+        }
+        return undefined;
+    };
+
+    this.highScoreCallback = null;//expected function(score){..}
+
+    this._checkForHighScore = function(score){
+      var list = this._list;
+      var max = -1;
+      for(var ent in list){
+        if(max < list[ent].score){
+          max = list[ent].score;
+        }
+      }
+      if(score > max && this.highScoreCallback){
+          this.highScoreCallback(score);
+      }
+    };
+
     this.clearMatched = function(socket){
       var sockInfo = this.getSocketInfo(socket);
       //removing removed socket,
@@ -106,7 +138,8 @@ function playerTable(){
         socket: skt,
         playerId: id,
         matched: mtchd,
-        matchCode: -1
+        matchCode: -1,
+        score: 0
       };
     };
 
@@ -117,8 +150,8 @@ function playerTable(){
 
     this.print = function(){
       var table = new Table({
-        head: ['Player', 'matchCode', 'matched']
-      , colWidths: [15, 15, 15]
+        head: ['player', 'score', 'matchCode', 'matched']
+      , colWidths: [15, 15, 15, 15]
       });
     //  console.log(this._list.length);
       // table is an Array, so you can `push`, `unshift`, `splice` and friends
@@ -127,7 +160,7 @@ function playerTable(){
 
       list.forEach(function(ent){
         table.push(
-            [count++,list[ent].matchCode,list[ent].matched ? list[ent].matched : "null"]
+            [count++,list[ent].score, list[ent].matchCode,list[ent].matched ? list[ent].matched : "null"]
         );
       });
       console.log(table.toString());
