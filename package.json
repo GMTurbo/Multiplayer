@@ -4,8 +4,10 @@
   "description": "module to handle 2 player multiplayer ",
   "main": "index.js",
   "scripts": {
-    "test": "node test/*.js"
-  },
+    "pretest":"node index.js",
+    "test": "node test/*.js",
+    "posttest" : ""
+    },
   "keywords": [
     "socketio",
     "2",
@@ -21,8 +23,8 @@
     "mocha": "^1.18.2",
     "random-enough": "^1.0.2",
     "redis": "^0.10.1",
-    "should": "^3.3.0",
     "socket.io": "^0.9.16",
+    "socket.io-client": "^0.9.16",
     "tape": "^2.12.3"
   }
 }
